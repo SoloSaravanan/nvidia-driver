@@ -37,7 +37,7 @@ jobs:
           %_topdir ${GITHUB_WORKSPACE}
           %_openpgp_sign_id ${{ secrets.GPG_KEY_ID }}
           # Remove _gpg_name after rpm v6.0 is released
-          %_gpg_name Fxzx micah (github/nvidia-driver) <48860358+fxzxmicah@users.noreply.github.com>
+          %_gpg_name SoloSaravanan <SoloSaravanan@proton.me>
           EOF
 
       - name: Build & Sign RPM Packages
@@ -60,6 +60,7 @@ jobs:
           files: RPMS/*/*
 
       - name: Setup OSS Utility
+        if: false
         uses: yizhoumo/setup-ossutil@v2
         with:
           ossutil-version: "latest"
@@ -68,6 +69,7 @@ jobs:
           access-key-secret: ${{ secrets.ACCESSKEY_SECRET }}
 
       - name: Create Repository
+        if: false
         run: |
           mkdir -p REPO
           cd $_
