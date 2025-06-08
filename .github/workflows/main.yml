@@ -47,6 +47,11 @@ jobs:
           rpmbuild -ba SPECS/*.spec
           #rpmsign --addsign RPMS/*/*
 
+      - name: Zip All RPMs
+        run: |
+          mkdir -p dist
+          tar -czvf dist/nvidia-driver.tar.gz -C RPMS .
+
       - name: Check and Prepare Release
         id: vars
         run: |
@@ -57,7 +62,9 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.vars.outputs.version }}
-          files: RPMS/*/*
+          files: |
+            RPMS/*/*
+            dist/nvidia-driver.tar.gz
 
       - name: Setup OSS Utility
         if: false
