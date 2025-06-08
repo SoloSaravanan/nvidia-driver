@@ -22,7 +22,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          dnf install -y dnf5-plugins gnupg rpmdevtools rpm-sign createrepo_c
+          dnf install -y dnf5-plugins gnupg rpmdevtools rpm-sign createrepo_c kernel-devel
 
       - name: Import GPG Private Key
         run: |
