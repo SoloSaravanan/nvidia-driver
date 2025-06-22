@@ -37,7 +37,7 @@ jobs:
           %_topdir ${GITHUB_WORKSPACE}
           %_openpgp_sign_id ${{ secrets.GPG_KEY_ID }}
           # Remove _gpg_name after rpm v6.0 is released
-          %_gpg_name SoloSaravanan <SoloSaravanan@proton.me>
+          %_gpg_name SoloSaravanan (github/nvidia-driver) <SoloSaravanan@proton.me>
           EOF
 
       - name: Build & Sign RPM Packages
@@ -45,7 +45,7 @@ jobs:
           dnf builddep -y SPECS/*.spec
           spectool --get-files --sourcedir SPECS/*.spec
           rpmbuild -ba SPECS/*.spec
-          #rpmsign --addsign RPMS/*/*
+          rpmsign --addsign RPMS/*/*
 
       - name: Zip All RPMs
         run: |
@@ -93,9 +93,9 @@ jobs:
             --revision="$(date +%Y%m%d.%H%M)" \
             -v .
 
-          #gpg --batch --yes \
-          #    --local-user "${{ secrets.GPG_KEY_ID }}" \
-          #    --armor --detach-sign repodata/repomd.xml
+          gpg --batch --yes \
+              --local-user "${{ secrets.GPG_KEY_ID }}" \
+              --armor --detach-sign repodata/repomd.xml
 
           ossutil sync repo/ "oss://${{ secrets.OSS_BUCKET }}/${ID}-${VERSION_ID}/repo/" --force --update
           ossutil sync repodata/ "oss://${{ secrets.OSS_BUCKET }}/${ID}-${VERSION_ID}/repodata/" --force --delete
