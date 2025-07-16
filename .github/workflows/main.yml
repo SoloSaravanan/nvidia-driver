@@ -49,9 +49,10 @@ jobs:
 
       - name: Zip All RPMs
         run: |
-          mkdir -p dist
-          tar -czvf dist/nvidia-driver.tar.gz -C RPMS .
-
+          mkdir -p dist/all
+          cp RPMS/*/*.rpm dist/all/
+          tar -czvf dist/nvidia-driver.tar.gz -C dist/all .
+          
       - name: Check and Prepare Release
         id: vars
         run: |
