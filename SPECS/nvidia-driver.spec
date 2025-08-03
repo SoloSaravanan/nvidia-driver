@@ -14,8 +14,8 @@ Summary:                NVIDIA binary driver for Linux
 Group:                  System Environment/Graphics
 License:                NVIDIA
 URL:                    http://www.nvidia.com/
-Source0:                https://download.nvidia.com/XFree86/Linux-%{_arch}/%{version}/NVIDIA-Linux-%{_arch}-%{version}-no-compat32.run
-Source1:                https://download.nvidia.com/XFree86/Linux-%{_arch}/%{version}/NVIDIA-Linux-%{_arch}-%{version}-no-compat32.run.sha256sum
+Source0:                https://download.nvidia.com/XFree86/Linux-%{_arch}/%{version}/NVIDIA-Linux-%{_arch}-%{version}.run
+Source1:                https://download.nvidia.com/XFree86/Linux-%{_arch}/%{version}/NVIDIA-Linux-%{_arch}-%{version}.run.sha256sum
 
 Source2:                nouveau.conf
 Source3:                nvidia.conf
@@ -301,6 +301,8 @@ Requires:               nvidia-modprobe%{?_isa} = %{version}-%{release}
 %description -n nvidia-ngx
 NVIDIA NGX Utilities
 
+
+
 %package -n nvidia-security
 Summary:                NVIDIA Security Libraries
 
@@ -380,6 +382,7 @@ mkdir -p %{buildroot}/lib/modules/%{kernel_rel}.%{_arch}/kernel/drivers/video
 mkdir -p %{buildroot}%{_datadir}/applications
 mkdir -p %{buildroot}%{_prefix}/src/nvidia-%{version}
 mkdir -p %{buildroot}%{_var}/run/nvidia-persistenced
+mkdir -p %{buildroot}%{_libdir}/nvidia/wine
 
 install -Dm0400 /dev/null -t %{buildroot}%{_sysconfdir}/keys/modsign.key
 install -Dm0444 /dev/null -t %{buildroot}%{_sysconfdir}/keys/modsign.der
@@ -417,6 +420,7 @@ mv libnvidia-glcore.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv libnvidia-tls.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv nvidia_icd.json %{buildroot}%{_datadir}/nvidia/vulkan
 mv nvidia_layers.json %{buildroot}%{_datadir}/nvidia/vulkan
+mv nvidia_icd_vksc.json %{buildroot}%{_datadir}/vulkan/icd.d/
 mv nvidia-application-profiles-%{version}-* %{buildroot}%{_datadir}/nvidia
 mv libGLX_nvidia.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv libnvidia-glsi.so.%{version} %{buildroot}%{_libdir}/nvidia
@@ -453,6 +457,9 @@ mv libnvoptix.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv nvoptix.bin %{buildroot}%{_datadir}/nvidia
 mv libnvidia-ngx.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv nvidia-ngx-updater %{buildroot}%{_bindir}
+mv nvngx.dll %{buildroot}%{_libdir}/nvidia/wine
+mv nvngx_dlssg.dll %{buildroot}%{_libdir}/nvidia/wine
+mv _nvngx.dll %{buildroot}%{_libdir}/nvidia/wine
 mv libnvidia-fbc.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv libnvcuvid.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv libnvidia-encode.so.%{version} %{buildroot}%{_libdir}/nvidia
@@ -660,6 +667,7 @@ fi
 %{_libdir}/nvidia/libnvidia-egl-wayland.so.*
 %{_libdir}/libnvidia-egl-wayland.so.1
 %{_datadir}/egl/egl_external_platform.d/10_nvidia_wayland.json
+%{_datadir}/egl/wayland/10_nvidia_wayland.json
 
 %files -n nvidia-egl-gbm
 %defattr(-,root,root,-)
@@ -707,6 +715,7 @@ fi
 %ghost %{_datadir}/vulkan/implicit_layer.d/nvidia_layers.json
 %{_datadir}/nvidia/vulkan/nvidia_icd.json
 %{_datadir}/nvidia/vulkan/nvidia_layers.json
+%{_datadir}/vulkan/icd.d/nvidia_icd_vksc.json
 
 %files -n nvidia-opencl
 %defattr(-,root,root,-)
@@ -795,6 +804,9 @@ fi
 %{_bindir}/nvidia-ngx-updater
 %{_libdir}/nvidia/libnvidia-ngx.so.%{version}
 %{_libdir}/libnvidia-ngx.so.1
+%{_libdir}/nvidia/wine/nvngx.dll
+%{_libdir}/nvidia/wine/nvngx_dlssg.dll
+%{_libdir}/nvidia/wine/_nvngx.dll
 
 %files -n nvidia-security
 %defattr(-,root,root,-)
