@@ -667,7 +667,6 @@ fi
 %{_libdir}/nvidia/libnvidia-egl-wayland.so.*
 %{_libdir}/libnvidia-egl-wayland.so.1
 %{_datadir}/egl/egl_external_platform.d/10_nvidia_wayland.json
-%{_datadir}/egl/wayland/10_nvidia_wayland.json
 
 %files -n nvidia-egl-gbm
 %defattr(-,root,root,-)
