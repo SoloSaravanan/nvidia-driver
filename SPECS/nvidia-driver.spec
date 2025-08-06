@@ -8,7 +8,7 @@
 %endif
 
 Name:                   nvidia-driver
-Version:                575.64.05
+Version:                580.65.06
 Release:                %{autorelease}
 Summary:                NVIDIA binary driver for Linux
 Group:                  System Environment/Graphics
