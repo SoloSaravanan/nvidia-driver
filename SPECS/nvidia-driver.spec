@@ -8,14 +8,14 @@
 %endif
 
 Name:                   nvidia-driver
-Version:                580.65.06
+Version:                580.76.05
 Release:                %{autorelease}
 Summary:                NVIDIA binary driver for Linux
 Group:                  System Environment/Graphics
 License:                NVIDIA
 URL:                    http://www.nvidia.com/
-Source0:                https://download.nvidia.com/XFree86/Linux-%{_arch}/%{version}/NVIDIA-Linux-%{_arch}-%{version}.run
-Source1:                https://download.nvidia.com/XFree86/Linux-%{_arch}/%{version}/NVIDIA-Linux-%{_arch}-%{version}.run.sha256sum
+Source0:                https://us.download.nvidia.com/XFree86/Linux-%{_arch}/%{version}/NVIDIA-Linux-%{_arch}-%{version}.run
+Source1:                https://us.download.nvidia.com/XFree86/Linux-%{_arch}/%{version}/NVIDIA-Linux-%{_arch}-%{version}.run.sha256sum
 
 Source2:                nouveau.conf
 Source3:                nvidia.conf
