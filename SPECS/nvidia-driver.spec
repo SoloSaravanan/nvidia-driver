@@ -816,6 +816,7 @@ fi
 %{_bindir}/nvidia-ngx-updater
 %{_libdir}/nvidia/libnvidia-ngx.so.%{version}
 %{_libdir}/libnvidia-ngx.so.%{version}
+%{_libdir}/libnvidia-ngx.so.1
 %{_libdir}/nvidia/wine/nvngx.dll
 %{_libdir}/nvidia/wine/nvngx_dlssg.dll
 %{_libdir}/nvidia/wine/_nvngx.dll
