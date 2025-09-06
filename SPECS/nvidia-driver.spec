@@ -424,6 +424,8 @@ mv nvidia_layers.json %{buildroot}%{_datadir}/nvidia/vulkan
 mv nvidia_icd_vksc.json %{buildroot}%{_datadir}/vulkan/icd.d/
 mv nvidia-application-profiles-%{version}-* %{buildroot}%{_datadir}/nvidia
 mv libGLX_nvidia.so.%{version} %{buildroot}%{_libdir}/nvidia
+mv libnvidia-present.so.%{version} %{buildroot}%{_libdir}/nvidia
+mv libnvidia-vksc-core.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv libnvidia-glsi.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv libnvidia-glvkspirv.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv 10_nvidia.json %{buildroot}%{_datadir}/glvnd/egl_vendor.d
@@ -499,6 +501,8 @@ ln -sr nvidia/libnvidia-glcore.so.%{version} libnvidia-glcore.so.%{version}
 ln -sr nvidia/libnvidia-tls.so.%{version} libnvidia-tls.so.%{version}
 ln -sr nvidia/libGLX_nvidia.so.%{version} libGLX_nvidia.so.0
 ln -sr libGLX_nvidia.so.0 libGLX_indirect.so.0
+ln -sr nvidia/libnvidia-present.so.%{version} libnvidia-present.so.%{version}
+ln -sr nvidia/libnvidia-vksc-core.so.%{version} libnvidia-vksc-core.so.1
 ln -sr nvidia/libnvidia-glsi.so.%{version} libnvidia-glsi.so.%{version}
 ln -sr nvidia/libnvidia-glvkspirv.so.%{version} libnvidia-glvkspirv.so.%{version}
 ln -sr xorg/modules/extensions/libglxserver_nvidia.so.%{version} xorg/modules/extensions/libglxserver_nvidia.so
@@ -716,6 +720,11 @@ fi
 %defattr(-,root,root,-)
 %{_libdir}/nvidia/libGLX_nvidia.so.%{version}
 %{_libdir}/libGLX_nvidia.so.0
+%{_libdir}/nvidia/libnvidia-present.so.%{version}
+%{_libdir}/libnvidia-present.so.%{version}
+%{_libdir}/nvidia/libnvidia-vksc-core.so.%{version}
+%{_libdir}/libnvidia-vksc-core.so.1
+
 %{_libdir}/libGLX_indirect.so.0
 %{_libdir}/nvidia/libnvidia-glcore.so.%{version}
 %{_libdir}/libnvidia-glcore.so.%{version}
