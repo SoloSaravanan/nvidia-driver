@@ -47,12 +47,20 @@ jobs:
           rpmbuild -ba SPECS/*.spec
           rpmsign --addsign RPMS/*/*
 
+      - name: Extract NVIDIA Driver Version from RPM
+        id: nvidia_version
+        run: |
+          # Extract version from the nvidia-driver RPM specifically
+          NVIDIA_VERSION=$(rpm -qp RPMS/*/nvidia-driver-*.rpm --queryformat="%{VERSION}" | head -1)
+          echo "NVIDIA_VERSION=$NVIDIA_VERSION" >> $GITHUB_OUTPUT
+          echo "Found NVIDIA driver version: $NVIDIA_VERSION"
+
       - name: Zip All RPMs
         run: |
           mkdir -p dist/all
           cp RPMS/*/*.rpm dist/all/
-          tar -czvf dist/nvidia-driver.tar.gz -C dist/all .
-          
+          tar -czvf dist/nvidia-driver-${{ steps.nvidia_version.outputs.NVIDIA_VERSION }}.tar.gz -C dist/all .
+
       - name: Check and Prepare Release
         id: vars
         run: |
@@ -65,7 +73,7 @@ jobs:
           tag_name: ${{ steps.vars.outputs.version }}
           files: |
             RPMS/*/*
-            dist/nvidia-driver.tar.gz
+            dist/nvidia-driver-*.tar.gz
 
       - name: Setup OSS Utility
         if: false

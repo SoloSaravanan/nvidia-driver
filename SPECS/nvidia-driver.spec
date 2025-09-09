@@ -476,9 +476,8 @@ mv libnvoptix.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv nvoptix.bin %{buildroot}%{_datadir}/nvidia
 mv libnvidia-ngx.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv nvidia-ngx-updater %{buildroot}%{_bindir}
-mv nvngx.dll %{buildroot}%{_libdir}/nvidia/wine
-mv nvngx_dlssg.dll %{buildroot}%{_libdir}/nvidia/wine
-mv _nvngx.dll %{buildroot}%{_libdir}/nvidia/wine
+mv *.dll %{buildroot}%{_libdir}/nvidia/wine
+chmod 755 %{buildroot}%{_libdir}/nvidia/wine/*.dll
 mv libnvidia-fbc.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv libnvcuvid.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv libnvidia-encode.so.%{version} %{buildroot}%{_libdir}/nvidia
@@ -745,7 +744,6 @@ fi
 %{_libdir}/libnvidia-present.so.%{version}
 %{_libdir}/nvidia/libnvidia-vksc-core.so.%{version}
 %{_libdir}/libnvidia-vksc-core.so.1
-
 %{_libdir}/libGLX_indirect.so.0
 %{_libdir}/nvidia/libnvidia-glcore.so.%{version}
 %{_libdir}/libnvidia-glcore.so.%{version}
