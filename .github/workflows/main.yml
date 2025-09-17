@@ -22,7 +22,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          dnf install -y dnf5-plugins gnupg rpmdevtools rpm-sign createrepo_c kernel-devel
+          dnf install -y dnf5-plugins gnupg rpmdevtools rpm-sign createrepo_c kernel-devel git
 
       - name: Import GPG Private Key
         run: |
@@ -46,6 +46,24 @@ jobs:
           spectool --get-files --sourcedir SPECS/*.spec
           rpmbuild -ba SPECS/*.spec
           rpmsign --addsign RPMS/*/*
+
+      - name: Create Repo Metadata
+        run: |
+          mkdir -p repo
+          cp RPMS/*/*.rpm repo/
+          createrepo_c repo/
+          gpg --batch --yes \
+              --local-user "${{ secrets.GPG_KEY_ID }}" \
+              --armor --detach-sign repo/repodata/repomd.xml
+          gpg --batch --yes --armor --export "${{ secrets.GPG_KEY_ID }}" > repo/pubkey.gpg
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./repo
+          publish_branch: gh-pages
+          force_orphan: true
 
       - name: Extract NVIDIA Driver Version from RPM
         id: nvidia_version
