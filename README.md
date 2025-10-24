@@ -3,6 +3,8 @@
 **Add repository**
 
 ```
+sudo sed -i '/^enabled=1$/!b; n; /^[[:space:]]*exclude=/!i exclude=*nvidia*' /etc/yum.repos.d/rpmfusion-nonfree*.repo
+
 sudo tee -a /etc/yum.repos.d/nvidia-driver.repo > /dev/null << 'EOF'
 [nvidia-driver]
 name=Nvidia Driver
