@@ -14,11 +14,15 @@ permissions:
 jobs:
   job:
     runs-on: ubuntu-latest
-    container: fedora:latest
+    container: fedora:43
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+
+      - name: Disable updates-testing repository
+        run: |
+          sed -i 's/^enabled=1/enabled=0/' /etc/yum.repos.d/fedora-updates-testing.repo
 
       - name: Install Dependencies
         run: |
