@@ -14,14 +14,14 @@ jobs:
   job:
     runs-on: ubuntu-latest
     container: fedora:43
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Install Dependencies
         run: |
-          dnf install -y rpmdevtools rpm-sign createrepo_c kernel-devel git
+          dnf install -y rpmdevtools rpm-sign createrepo_c kernel-devel git git-lfs
+          git lfs install
 
       - name: Import GPG Private Key
         uses: crazy-max/ghaction-import-gpg@v5
@@ -55,6 +55,18 @@ jobs:
               --armor --detach-sign repo/repodata/repomd.xml
           gpg --batch --yes --armor --export "${{ secrets.GPG_KEY_ID }}" > repo/pubkey.gpg
 
+      - name: Enable Git LFS for large files
+        run: |
+          cd repo
+          git init
+          git lfs install
+          git lfs track "*.rpm"
+          git add .gitattributes
+          git add .
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          git commit -m "Prepare LFS tracking for RPMs"
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
@@ -66,7 +78,6 @@ jobs:
       - name: Extract NVIDIA Driver Version from RPM
         id: nvidia_version
         run: |
-          # Extract version from the nvidia-driver RPM specifically
           NVIDIA_VERSION=$(rpm -qp RPMS/*/nvidia-driver-*.rpm --queryformat="%{VERSION}" | head -1)
           echo "NVIDIA_VERSION=$NVIDIA_VERSION" >> $GITHUB_OUTPUT
           echo "Found NVIDIA driver version: $NVIDIA_VERSION"
@@ -81,7 +92,7 @@ jobs:
         id: vars
         run: |
           echo "version=$(rpm -q --queryformat="%{VERSION}-%{RELEASE}" kernel-devel)" >> $GITHUB_OUTPUT
-          cat leaves.list
+          cat leaves.list || true
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
@@ -106,24 +117,18 @@ jobs:
           mkdir -p REPO
           cd $_
           ln -srf ../RPMS repo
-
           . /etc/os-release
-
           ossutil sync "oss://${{ secrets.OSS_BUCKET }}/${ID}-${VERSION_ID}/repodata/" repodata/ --force --delete
-
           createrepo_c --update \
             --distro="cpe:/o:fedoraproject:${ID}:${VERSION_ID},${NAME} ${VERSION_ID}" \
             --content="region=cn" \
             --repo="vendor=GitHub (${{ github.repository }}),visibility=internal" \
             --revision="$(date +%Y%m%d.%H%M)" \
             -v .
-
           gpg --batch --yes \
               --local-user "${{ steps.gpg.outputs.keyid }}" \
               --armor --detach-sign repodata/repomd.xml
-
           ossutil sync repo/ "oss://${{ secrets.OSS_BUCKET }}/${ID}-${VERSION_ID}/repo/" --force --update
           ossutil sync repodata/ "oss://${{ secrets.OSS_BUCKET }}/${ID}-${VERSION_ID}/repodata/" --force --delete
-
           gpg --batch --yes --armor --export "${{ steps.gpg.outputs.keyid }}" > pubkey.gpg
           ossutil cp pubkey.gpg "oss://${{ secrets.OSS_BUCKET }}/${ID}-${VERSION_ID}/pubkey.gpg" --force
