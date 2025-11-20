@@ -65,8 +65,6 @@ Group:                  System Environment/Hardware
 Epoch:                  1
 BuildArch:              noarch
 
-Requires:               nvidia-modules = %{version}-%{main_rel}
-
 Provides:               nvidia-gpu-firmware = %{version}-%{main_rel}
 Provides:               installonlypkg(nvidia-gpu-firmware)
 
@@ -83,6 +81,8 @@ Requires:               nvidia-modules-open = %{version}-%{main_rel}
 
 Requires:               module-init-tools
 
+Provides:               nvidia-common = 1.0.0-%{main_rel}
+
 %description -n nvidia-common
 NVIDIA Graphics common files
 
@@ -96,7 +96,7 @@ Requires:               kernel-uname-r = %{kernel_rel}.%{_arch}
 Requires:               kernel-modules-core-uname-r = %{kernel_rel}.%{_arch}
 
 Requires:               nvidia-gpu-firmware = %{version}-%{main_rel}
-Requires:               nvidia-common
+Requires:               nvidia-common = 1.0.0-%{main_rel}
 
 %if %{sign_module}
 # For sign-module utility
