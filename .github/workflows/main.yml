@@ -16,6 +16,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Disable updates-testing repository
+        run: |
+          sed -i 's/^enabled=1/enabled=0/' /etc/yum.repos.d/fedora-updates-testing.repo
+
       - name: Install Dependencies
         run: |
           dnf install -y rpmdevtools rpm-sign createrepo_c kernel-devel git
