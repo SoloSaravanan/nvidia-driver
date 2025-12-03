@@ -2,9 +2,6 @@ name: Build RPM & Release
 
 on:
   push:
-    paths:
-      - 'SPECS/**'
-      - 'SOURCES/**'
   workflow_dispatch:
 
 permissions:

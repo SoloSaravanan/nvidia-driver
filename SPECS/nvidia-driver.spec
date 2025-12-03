@@ -15,7 +15,7 @@
 %endif
 
 Name:                   nvidia-driver
-Version:                580.105.08
+Version:                590.44.01
 Release:                %{main_rel}
 Summary:                NVIDIA binary driver for Linux
 Group:                  System Environment/Graphics
@@ -65,7 +65,7 @@ Group:                  System Environment/Hardware
 Epoch:                  1
 BuildArch:              noarch
 
-Requires:               nvidia-modules = %{version}-%{main_rel}
+Requires:               nvidia-modules-open = %{version}-%{main_rel}
 
 Provides:               nvidia-gpu-firmware = %{version}-%{main_rel}
 Provides:               installonlypkg(nvidia-gpu-firmware)
