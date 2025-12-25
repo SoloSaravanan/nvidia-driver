@@ -410,6 +410,7 @@ mkdir -p %{buildroot}%{_datadir}/applications
 mkdir -p %{buildroot}%{_prefix}/src/nvidia-%{version}
 mkdir -p %{buildroot}%{_var}/run/nvidia-persistenced
 mkdir -p %{buildroot}%{_libdir}/nvidia/wine
+mkdir -p %{buildroot}%{_sysconfdir}/vulkansc/icd.d
 
 %if %{sign_module}
 install -Dm0400 /dev/null -t %{buildroot}%{_sysconfdir}/keys/modsign.key
@@ -450,10 +451,11 @@ mv libnvidia-glcore.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv libnvidia-tls.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv nvidia_icd.json %{buildroot}%{_datadir}/nvidia/vulkan
 mv nvidia_layers.json %{buildroot}%{_datadir}/nvidia/vulkan
-mv nvidia_icd_vksc.json %{buildroot}%{_datadir}/vulkan/icd.d/
+mv nvidia_icd_vksc.json %{buildroot}%{_sysconfdir}/vulkansc/icd.d/
 mv nvidia-application-profiles-%{version}-* %{buildroot}%{_datadir}/nvidia
 mv libGLX_nvidia.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv libnvidia-present.so.%{version} %{buildroot}%{_libdir}/nvidia
+mv libnvidia-tileiras.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv libnvidia-vksc-core.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv libnvidia-glsi.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv libnvidia-glvkspirv.so.%{version} %{buildroot}%{_libdir}/nvidia
@@ -465,7 +467,9 @@ mv libEGL_nvidia.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv libGLESv2_nvidia.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv libGLESv1_CM_nvidia.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv libnvidia-egl-wayland.so.* %{buildroot}%{_libdir}/nvidia
+mv libnvidia-egl-wayland2.so.* %{buildroot}%{_libdir}/nvidia
 mv 10_nvidia_wayland.json %{buildroot}%{_datadir}/egl/egl_external_platform.d
+mv 99_nvidia_wayland2.json %{buildroot}%{_datadir}/egl/egl_external_platform.d
 mv libnvidia-egl-gbm.so.* %{buildroot}%{_libdir}/nvidia
 mv 15_nvidia_gbm.json %{buildroot}%{_datadir}/egl/egl_external_platform.d
 mv libnvidia-egl-xcb.so.* %{buildroot}%{_libdir}/nvidia
@@ -497,6 +501,7 @@ mv libnvidia-encode.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv libnvidia-opticalflow.so.%{version} %{buildroot}%{_libdir}/nvidia
 rm libnvidia-pkcs11.so.%{version}
 mv libnvidia-pkcs11-openssl3.so.%{version} %{buildroot}%{_libdir}/nvidia
+mv libnvidia-sandboxutils.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv kernel-open/*.ko* %{buildroot}/lib/modules/%{kernel_rel}.%{_arch}/kernel/drivers/video
 mv nvidia-settings.desktop %{buildroot}%{_datadir}/applications
 mv kernel-open/* %{buildroot}%{_prefix}/src/nvidia-%{version}
@@ -509,6 +514,7 @@ install -Dm0644 %{SOURCE6} -t %{buildroot}%{_unitdir}
 
 jq .ICD.library_path=\"libEGL_nvidia.so.0\" %{buildroot}%{_datadir}/nvidia/vulkan/nvidia_icd.json > %{buildroot}%{_datadir}/nvidia/vulkan/egl-nvidia_icd.json
 jq .layers[0].library_path=\"libEGL_nvidia.so.0\" %{buildroot}%{_datadir}/nvidia/vulkan/nvidia_layers.json > %{buildroot}%{_datadir}/nvidia/vulkan/egl-nvidia_layers.json
+jq .ICD.library_path=\"libEGL_nvidia.so.0\" %{buildroot}%{_sysconfdir}/vulkansc/icd.d/nvidia_icd_vksc.json > %{buildroot}%{_datadir}/nvidia/vulkan/egl-nvidia_icd_vksc.json
 
 cp LICENSE LICENSE-%{version}-%{kernel_rel}
 cp LICENSE LICENSE-%{version}
@@ -532,6 +538,7 @@ ln -sr nvidia/libnvidia-glcore.so.%{version} libnvidia-glcore.so.%{version}
 ln -sr nvidia/libnvidia-tls.so.%{version} libnvidia-tls.so.%{version}
 ln -sr nvidia/libGLX_nvidia.so.%{version} libGLX_nvidia.so.0
 ln -sr libGLX_nvidia.so.0 libGLX_indirect.so.0
+ln -sr nvidia/libnvidia-tileiras.so.%{version} libnvidia-tileiras.so.%{version}
 ln -sr nvidia/libnvidia-present.so.%{version} libnvidia-present.so.%{version}
 ln -sr nvidia/libnvidia-vksc-core.so.%{version} libnvidia-vksc-core.so.1
 ln -sr nvidia/libnvidia-glsi.so.%{version} libnvidia-glsi.so.%{version}
@@ -542,6 +549,7 @@ ln -sr nvidia/libEGL_nvidia.so.%{version} libEGL_nvidia.so.0
 ln -sr nvidia/libGLESv2_nvidia.so.%{version} libGLESv2_nvidia.so.2
 ln -sr nvidia/libGLESv1_CM_nvidia.so.%{version} libGLESv1_CM_nvidia.so.1
 ln -sr nvidia/libnvidia-egl-wayland.so.* libnvidia-egl-wayland.so.1
+ln -sr nvidia/libnvidia-egl-wayland2.so.* libnvidia-egl-wayland2.so.1
 ln -sr nvidia/libnvidia-egl-gbm.so.* libnvidia-egl-gbm.so.1
 ln -sr nvidia/libnvidia-egl-xcb.so.* libnvidia-egl-xcb.so.1
 ln -sr nvidia/libnvidia-egl-xlib.so.* libnvidia-egl-xlib.so.1
@@ -566,6 +574,9 @@ ln -sr libnvidia-encode.so.1 libnvidia-encode.so
 ln -sr nvidia/libnvidia-opticalflow.so.%{version} libnvidia-opticalflow.so.1
 ln -sr libnvidia-opticalflow.so.1 libnvidia-opticalflow.so
 ln -sr nvidia/libnvidia-pkcs11-openssl3.so.%{version} libnvidia-pkcs11-openssl3.so.%{version}
+ln -sr nvidia/libnvidia-sandboxutils.so.%{version} libnvidia-sandboxutils.so.%{version}
+ln -sr nvidia/libnvidia-sandboxutils.so.%{version} libnvidia-sandboxutils.so.1
+ln -sr libnvidia-sandboxutils.so.1 libnvidia-sandboxutils.so
 
 cd %{buildroot}%{_prefix}/src/nvidia-%{version}
 ln -srf nvidia-modeset/nv-modeset-kernel.o_binary nvidia-modeset/nv-modeset-kernel.o
@@ -719,7 +730,10 @@ fi
 %defattr(-,root,root,-)
 %{_libdir}/nvidia/libnvidia-egl-wayland.so.*
 %{_libdir}/libnvidia-egl-wayland.so.1
+%{_libdir}/nvidia/libnvidia-egl-wayland2.so.*
+%{_libdir}/libnvidia-egl-wayland2.so.1
 %{_datadir}/egl/egl_external_platform.d/10_nvidia_wayland.json
+%{_datadir}/egl/egl_external_platform.d/99_nvidia_wayland2.json
 
 %files -n nvidia-egl-gbm
 %defattr(-,root,root,-)
@@ -764,6 +778,8 @@ fi
 %{_libdir}/libGLX_nvidia.so.0
 %{_libdir}/nvidia/libnvidia-present.so.%{version}
 %{_libdir}/libnvidia-present.so.%{version}
+%{_libdir}/nvidia/libnvidia-tileiras.so.%{version}
+%{_libdir}/libnvidia-tileiras.so.%{version}
 %{_libdir}/nvidia/libnvidia-vksc-core.so.%{version}
 %{_libdir}/libnvidia-vksc-core.so.1
 %{_libdir}/libGLX_indirect.so.0
@@ -773,7 +789,10 @@ fi
 %ghost %{_datadir}/vulkan/implicit_layer.d/nvidia_layers.json
 %{_datadir}/nvidia/vulkan/nvidia_icd.json
 %{_datadir}/nvidia/vulkan/nvidia_layers.json
-%{_datadir}/vulkan/icd.d/nvidia_icd_vksc.json
+%dir %{_sysconfdir}/vulkansc
+%dir %{_sysconfdir}/vulkansc/icd.d
+%{_datadir}/nvidia/vulkan/egl-nvidia_icd_vksc.json
+%config(noreplace) %{_sysconfdir}/vulkansc/icd.d/nvidia_icd_vksc.json
 
 %files -n nvidia-opencl
 %defattr(-,root,root,-)
@@ -875,6 +894,10 @@ fi
 %defattr(-,root,root,-)
 %{_libdir}/nvidia/libnvidia-pkcs11-openssl3.so.%{version}
 %{_libdir}/libnvidia-pkcs11-openssl3.so.%{version}
+%{_libdir}/nvidia/libnvidia-sandboxutils.so.%{version}
+%{_libdir}/libnvidia-sandboxutils.so.%{version}
+%{_libdir}/libnvidia-sandboxutils.so.1
+%{_libdir}/libnvidia-sandboxutils.so
 
 %files -n nvidia-cfg
 %defattr(-,root,root,-)
