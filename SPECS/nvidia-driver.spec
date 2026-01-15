@@ -4,7 +4,7 @@
 %define kernel_rel %(dnf repoquery kernel-devel --latest-limit=1 --queryformat="%%{VERSION}-%%{RELEASE}")
 
 %define main_rel %{autorelease}
-%define module_rel %(dnf repoquery kernel-devel --latest-limit=1 --queryformat="%%{VERSION}").%{main_rel}
+%define module_rel %(dnf repoquery kernel-devel --latest-limit=1 --queryformat="%%{VERSION}")%{?dist}
 
 %if %{sign_module}
 %define sign_tool %(gzip -c %{SOURCE7} | base64)
@@ -68,7 +68,7 @@ BuildArch:              noarch
 Requires:               nvidia-modules-open = %{version}-%{main_rel}
 
 Provides:               nvidia-gpu-firmware = %{version}-%{main_rel}
-Provides:               installonlypkg(nvidia-gpu-firmware)
+Provides:               installonlypkg(nvidia-modules-open)
 
 %description -n nvidia-gpu-firmware
 NVIDIA Graphics firmware
@@ -325,8 +325,6 @@ Requires:               nvidia-modprobe%{?_isa} = %{version}-%{main_rel}
 %description -n nvidia-ngx
 NVIDIA NGX Utilities
 
-
-
 %package -n nvidia-security
 Summary:                NVIDIA Security Libraries
 
@@ -565,6 +563,7 @@ ln -sr libnvidia-allocator.so.1 gbm/nvidia-drm_gbm.so
 ln -sr nvidia/libnvidia-rtcore.so.%{version} libnvidia-rtcore.so.%{version}
 ln -sr nvidia/libnvoptix.so.%{version} libnvoptix.so.1
 ln -sr nvidia/libnvidia-ngx.so.%{version} libnvidia-ngx.so.%{version}
+ln -sr libnvidia-ngx.so.%{version} libnvidia-ngx.so.1
 ln -sr nvidia/libnvidia-fbc.so.%{version} libnvidia-fbc.so.1
 ln -sr libnvidia-fbc.so.1 libnvidia-fbc.so
 ln -sr nvidia/libnvcuvid.so.%{version} libnvcuvid.so.1
