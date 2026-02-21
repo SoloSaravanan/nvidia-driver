@@ -56,14 +56,6 @@ jobs:
               --armor --detach-sign repo/repodata/repomd.xml
           gpg --batch --yes --armor --export "${{ secrets.GPG_KEY_ID }}" > repo/pubkey.gpg
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./repo
-          publish_branch: gh-pages
-          force_orphan: true
-
       - name: Extract NVIDIA Driver Version from RPM
         id: nvidia_version
         run: |
@@ -87,10 +79,19 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.vars.outputs.version }}
+          tag_name:  ${{ steps.vars.outputs.version }}
           files: |
             RPMS/*/*
             dist/nvidia-driver-*.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy to GitHub Pages
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.vars.outputs.version }}
+          files:
+            RPMS/*/*
 
       - name: Setup OSS Utility
         if: false
