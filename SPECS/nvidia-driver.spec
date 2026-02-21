@@ -361,6 +361,13 @@ Summary:                NVIDIA Development Files
 %description -n nvidia-devel
 NVIDIA Development Files
 
+%package -n nvidia-libs-32bit
+Summary:                NVIDIA 32-bit shared libraries for compatibility
+Requires:               nvidia-modprobe%{?_isa} = %{version}-%{main_rel}
+
+%description -n nvidia-libs-32bit
+Nvidia 32-bit libraries
+
 %prep
 cd %{_sourcedir}
 # Verify sha256sum
@@ -409,6 +416,8 @@ mkdir -p %{buildroot}%{_prefix}/src/nvidia-%{version}
 mkdir -p %{buildroot}%{_var}/run/nvidia-persistenced
 mkdir -p %{buildroot}%{_libdir}/nvidia/wine
 mkdir -p %{buildroot}%{_sysconfdir}/vulkansc/icd.d
+mkdir -p %{buildroot}/usr/lib/nvidia
+mkdir -p %{buildroot}%{_sysconfdir}/ld.so.conf.d
 
 %if %{sign_module}
 install -Dm0400 /dev/null -t %{buildroot}%{_sysconfdir}/keys/modsign.key
@@ -503,6 +512,15 @@ mv libnvidia-sandboxutils.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv kernel-open/*.ko* %{buildroot}/lib/modules/%{kernel_rel}.%{_arch}/kernel/drivers/video
 mv nvidia-settings.desktop %{buildroot}%{_datadir}/applications
 mv kernel-open/* %{buildroot}%{_prefix}/src/nvidia-%{version}
+mv 32/libcuda.so.%{version} %{buildroot}/usr/lib/nvidia/
+mv 32/libEGL_nvidia.so.%{version} %{buildroot}/usr/lib/nvidia/
+mv 32/libGLESv1_CM_nvidia.so.%{version} %{buildroot}/usr/lib/nvidia/
+mv 32/libGLESv2_nvidia.so.%{version} %{buildroot}/usr/lib/nvidia/
+mv 32/libGLX_nvidia.so.%{version} %{buildroot}/usr/lib/nvidia/
+mv 32/libnvcuvid.so.%{version} %{buildroot}/usr/lib/nvidia/
+mv 32/libnvidia-*.so.* %{buildroot}/usr/lib/nvidia/
+mv 32/libvdpau_nvidia.so.%{version} %{buildroot}/usr/lib/nvidia/
+echo "/usr/lib/nvidia" > %{buildroot}%{_sysconfdir}/ld.so.conf.d/nvidia-32bit.conf
 
 install -Dm0644 %{SOURCE2} -t %{buildroot}%{_modprobedir}
 install -Dm0644 %{SOURCE3} -t %{buildroot}%{_modprobedir}
@@ -513,6 +531,7 @@ install -Dm0644 %{SOURCE6} -t %{buildroot}%{_unitdir}
 jq .ICD.library_path=\"libEGL_nvidia.so.0\" %{buildroot}%{_datadir}/nvidia/vulkan/nvidia_icd.json > %{buildroot}%{_datadir}/nvidia/vulkan/egl-nvidia_icd.json
 jq .layers[0].library_path=\"libEGL_nvidia.so.0\" %{buildroot}%{_datadir}/nvidia/vulkan/nvidia_layers.json > %{buildroot}%{_datadir}/nvidia/vulkan/egl-nvidia_layers.json
 jq .ICD.library_path=\"libEGL_nvidia.so.0\" %{buildroot}%{_sysconfdir}/vulkansc/icd.d/nvidia_icd_vksc.json > %{buildroot}%{_datadir}/nvidia/vulkan/egl-nvidia_icd_vksc.json
+jq .ICD.library_path=\"/usr/lib/nvidia/libEGL_nvidia.so.0\" %{buildroot}%{_datadir}/nvidia/vulkan/nvidia_icd.json > %{buildroot}%{_datadir}/nvidia/vulkan/nvidia_icd_32.json
 
 cp LICENSE LICENSE-%{version}-%{kernel_rel}
 cp LICENSE LICENSE-%{version}
@@ -577,6 +596,16 @@ ln -sr nvidia/libnvidia-sandboxutils.so.%{version} libnvidia-sandboxutils.so.%{v
 ln -sr nvidia/libnvidia-sandboxutils.so.%{version} libnvidia-sandboxutils.so.1
 ln -sr libnvidia-sandboxutils.so.1 libnvidia-sandboxutils.so
 
+cd %{buildroot}/usr/lib
+ln -sr nvidia/libcuda.so.%{version} libcuda.so.1
+ln -sr libcuda.so.1 libcuda.so
+ln -sr nvidia/libGLX_nvidia.so.%{version} libGLX_nvidia.so.0
+ln -sr nvidia/libEGL_nvidia.so.%{version} libEGL_nvidia.so.0
+ln -sr nvidia/libGLESv2_nvidia.so.%{version} libGLESv2_nvidia.so.2
+ln -sr nvidia/libnvidia-ml.so.%{version} libnvidia-ml.so.1
+ln -sr nvidia/libnvidia-encode.so.%{version} libnvidia-encode.so.1
+ln -sr nvidia/libvdpau_nvidia.so.%{version} libvdpau_nvidia.so.1
+
 cd %{buildroot}%{_prefix}/src/nvidia-%{version}
 ln -srf nvidia-modeset/nv-modeset-kernel.o_binary nvidia-modeset/nv-modeset-kernel.o
 ln -srf nvidia/nv-kernel.o_binary nvidia/nv-kernel.o
@@ -624,6 +653,8 @@ update-alternatives --install %{_datadir}/vulkan/icd.d/nvidia_icd.json nvidia-vu
 %post -n nvidia-glx
 update-alternatives --install %{_datadir}/vulkan/icd.d/nvidia_icd.json nvidia-vulkan-icd %{_datadir}/nvidia/vulkan/nvidia_icd.json 50 --follower %{_datadir}/vulkan/implicit_layer.d/nvidia_layers.json nvidia-vulkan-layers %{_datadir}/nvidia/vulkan/nvidia_layers.json
 
+%post -n nvidia-libs-32bit -p /sbin/ldconfig
+
 %posttrans -n nvidia-modules-open
 if [ -f %{_localstatedir}/lib/rpm-state/kernel/nvidia_need_to_run_dracut_%{version}_%{kernel_rel}.%{_arch} ]; then
     rm -f %{_localstatedir}/lib/rpm-state/kernel/nvidia_need_to_run_dracut_%{version}_%{kernel_rel}.%{_arch}
@@ -660,6 +691,8 @@ fi
 
 %postun -n nvidia-powerd
 %systemd_postun nvidia-powerd.service
+
+%postun -n nvidia-libs-32bit -p /sbin/ldconfig
 
 %files
 %defattr(-,root,root,-)
@@ -919,6 +952,20 @@ fi
 %defattr(-,root,root,-)
 %dir %{_prefix}/src/nvidia-%{version}
 %{_prefix}/src/nvidia-%{version}/**
+
+%files -n nvidia-libs-32bit
+%defattr(-,root,root,-)
+%dir /usr/lib/nvidia
+/usr/lib/nvidia/lib*.so*
+/usr/lib/libcuda.so*
+/usr/lib/libGLX_nvidia.so.0
+/usr/lib/libEGL_nvidia.so.0
+/usr/lib/libGLESv2_nvidia.so.2
+/usr/lib/libnvidia-ml.so.1
+/usr/lib/libnvidia-encode.so.1
+/usr/lib/libvdpau_nvidia.so.1
+%config(noreplace) %{_sysconfdir}/ld.so.conf.d/nvidia-32bit.conf
+%{_datadir}/nvidia/vulkan/nvidia_icd_32.json
 
 %changelog
 %{autochangelog}
