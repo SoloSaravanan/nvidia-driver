@@ -6,11 +6,16 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 jobs:
   job:
     runs-on: ubuntu-latest
     container: fedora:43
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout Repository
@@ -56,14 +61,6 @@ jobs:
               --armor --detach-sign repo/repodata/repomd.xml
           gpg --batch --yes --armor --export "${{ secrets.GPG_KEY_ID }}" > repo/pubkey.gpg
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./repo
-          publish_branch: gh-pages
-          force_orphan: true
-
       - name: Extract NVIDIA Driver Version from RPM
         id: nvidia_version
         run: |
@@ -91,6 +88,15 @@ jobs:
           files: |
             RPMS/*/*
             dist/nvidia-driver-*.tar.gz
+
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./repo
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 
       - name: Setup OSS Utility
         if: false
