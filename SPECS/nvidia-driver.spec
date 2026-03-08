@@ -476,7 +476,6 @@ mv libGLESv1_CM_nvidia.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv libnvidia-egl-wayland.so.* %{buildroot}%{_libdir}/nvidia
 mv libnvidia-egl-wayland2.so.* %{buildroot}%{_libdir}/nvidia
 mv 10_nvidia_wayland.json %{buildroot}%{_datadir}/egl/egl_external_platform.d
-mv 99_nvidia_wayland2.json %{buildroot}%{_datadir}/egl/egl_external_platform.d
 mv libnvidia-egl-gbm.so.* %{buildroot}%{_libdir}/nvidia
 mv 15_nvidia_gbm.json %{buildroot}%{_datadir}/egl/egl_external_platform.d
 mv libnvidia-egl-xcb.so.* %{buildroot}%{_libdir}/nvidia
@@ -716,6 +715,7 @@ fi
 %{_unitdir}/nvidia-hibernate.service
 %{_unitdir}/nvidia-resume.service
 %{_unitdir}/nvidia-suspend-then-hibernate.service
+%{_unitdir}/systemd-*.service.d/nvidia-suspend-nofreeze.conf
 %{_unitdir}-sleep/*
 %{_presetdir}/*
 %dir %{_datadir}/nvidia
@@ -765,7 +765,6 @@ fi
 %{_libdir}/nvidia/libnvidia-egl-wayland2.so.*
 %{_libdir}/libnvidia-egl-wayland2.so.1
 %{_datadir}/egl/egl_external_platform.d/10_nvidia_wayland.json
-%{_datadir}/egl/egl_external_platform.d/99_nvidia_wayland2.json
 
 %files -n nvidia-egl-gbm
 %defattr(-,root,root,-)
