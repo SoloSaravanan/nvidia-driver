@@ -15,7 +15,7 @@
 %endif
 
 Name:                   nvidia-driver
-Version:                595.45.04
+Version:                595.58.03
 Release:                %{main_rel}
 Summary:                NVIDIA binary driver for Linux
 Group:                  System Environment/Graphics
@@ -418,6 +418,8 @@ mkdir -p %{buildroot}%{_libdir}/nvidia/wine
 mkdir -p %{buildroot}%{_sysconfdir}/vulkansc/icd.d
 mkdir -p %{buildroot}/usr/lib/nvidia
 mkdir -p %{buildroot}%{_sysconfdir}/ld.so.conf.d
+mkdir -p %{buildroot}%{_sysconfdir}/dracut.conf.d
+echo 'install_items+=" /lib/firmware/nvidia/%{version}/gsp_ga10x.bin /lib/firmware/nvidia/%{version}/gsp_tu10x.bin "' > %{buildroot}%{_sysconfdir}/dracut.conf.d/nvidia-firmware.conf
 
 %if %{sign_module}
 install -Dm0400 /dev/null -t %{buildroot}%{_sysconfdir}/keys/modsign.key
@@ -728,6 +730,7 @@ fi
 %dir /lib/firmware/nvidia
 %dir /lib/firmware/nvidia/%{version}
 /lib/firmware/nvidia/%{version}/*
+%config %{_sysconfdir}/dracut.conf.d/nvidia-firmware.conf
 
 %files -n nvidia-common
 %config %{_modprobedir}/*
