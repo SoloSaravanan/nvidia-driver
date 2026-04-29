@@ -12,7 +12,7 @@ permissions:
 jobs:
   job:
     runs-on: ubuntu-latest
-    container: fedora:43
+    container: fedora:44
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
