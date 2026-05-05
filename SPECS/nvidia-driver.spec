@@ -246,8 +246,6 @@ NVIDIA OpenCL Libraries
 %package -n nvidia-cuda
 Summary:                NVIDIA CUDA Utilities
 
-Requires:               nvidia-cuda-libs%{?_isa} = %{version}-%{main_rel}
-
 %description -n nvidia-cuda
 
 NVIDIA CUDA Libraries
