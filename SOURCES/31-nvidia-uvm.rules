@@ -1,0 +1,2 @@
+# Load nvidia-uvm module
+ACTION=="add", DEVPATH=="/bus/pci/drivers/nvidia", RUN+="/usr/bin/nvidia-modprobe -u -c 0"
