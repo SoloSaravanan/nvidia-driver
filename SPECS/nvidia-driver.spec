@@ -1,10 +1,10 @@
 # Feature: sign module
 %define sign_module 1
 
-%define kernel_rel %(dnf repoquery kernel-devel --latest-limit=1 --queryformat="%%{VERSION}-%%{RELEASE}")
+%global kernel_rel %(dnf repoquery kernel-devel --latest-limit=1 --queryformat="%%{VERSION}-%%{RELEASE}")
 
-%define main_rel %{autorelease}
-%define module_rel %(dnf repoquery kernel-devel --latest-limit=1 --queryformat="%%{VERSION}")%{?dist}
+%global main_rel %{autorelease}
+%global module_rel %(dnf repoquery kernel-devel --latest-limit=1 --queryformat="%%{VERSION}")%{?dist}
 
 %if %{sign_module}
 %define sign_tool %(gzip -c %{SOURCE8} | base64)
@@ -17,7 +17,7 @@
 %endif
 
 Name:                   nvidia-driver
-Version:                610.57.04
+Version:                615.71.09
 Release:                %{main_rel}
 Summary:                NVIDIA binary driver for Linux
 Group:                  System Environment/Graphics
