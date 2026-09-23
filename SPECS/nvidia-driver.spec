@@ -68,8 +68,6 @@ Group:                  System Environment/Hardware
 Epoch:                  1
 BuildArch:              noarch
 
-Requires:               nvidia-modules-open = %{version}-%{main_rel}
-
 Provides:               nvidia-gpu-firmware = %{version}-%{main_rel}
 Provides:               nvidia-gpu-firmware(gsp) = %{version}-%{main_rel}
 
