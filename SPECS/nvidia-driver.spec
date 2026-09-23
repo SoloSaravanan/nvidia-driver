@@ -320,18 +320,14 @@ mkdir -p %{buildroot}%{_sysconfdir}/OpenCL/vendors
 mkdir -p %{buildroot}%{_datadir}/dbus-1/system.d
 mkdir -p %{buildroot}%{_datadir}/nvidia
 mkdir -p %{buildroot}%{_datadir}/nvidia/vulkan
+mkdir -p %{buildroot}%{_datadir}/vulkansc/icd.d
 mkdir -p %{buildroot}%{_datadir}/glvnd/egl_vendor.d
-mkdir -p %{buildroot}%{_libdir}/xorg/modules/extensions
-mkdir -p %{buildroot}%{_datadir}/X11/xorg.conf.d
 mkdir -p %{buildroot}%{_datadir}/egl/egl_external_platform.d
-mkdir -p %{buildroot}%{_libdir}/xorg/modules/drivers
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/128x128/apps
 mkdir -p %{buildroot}%{_libdir}/vdpau
 mkdir -p %{buildroot}/lib/modules/%{kernel_rel}.%{_arch}/kernel/drivers/video
 mkdir -p %{buildroot}%{_datadir}/applications
-mkdir -p %{buildroot}%{_prefix}/src/nvidia-%{version}
 mkdir -p %{buildroot}%{_libdir}/nvidia/wine
-mkdir -p %{buildroot}%{_datadir}/vulkansc/icd.d
 mkdir -p %{buildroot}/usr/lib/nvidia
 mkdir -p %{buildroot}%{_sysconfdir}/ld.so.conf.d
 mkdir -p %{buildroot}%{_sysconfdir}/dracut.conf.d
@@ -355,6 +351,7 @@ mv libglvnd_install_checker/* %{buildroot}%{_prefix}/lib/nvidia
 mv nvidia-smi %{buildroot}%{_bindir}
 mv nvidia-smi.1.gz %{buildroot}%{_mandir}/man1
 mv libnvidia-ml.so.%{version} %{buildroot}%{_libdir}/nvidia
+mv libcuda.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv nvidia-debugdump %{buildroot}%{_bindir}
 mv libnvidia-gpucomp.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv libnvidia-api.so.* %{buildroot}%{_libdir}/nvidia
@@ -373,7 +370,6 @@ mv libnvidia-vksc-core.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv libnvidia-glsi.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv libnvidia-glvkspirv.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv 10_nvidia.json %{buildroot}%{_datadir}/glvnd/egl_vendor.d
-mv nvidia-drm-outputclass.conf %{buildroot}%{_datadir}/X11/xorg.conf.d
 mv libnvidia-eglcore.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv libEGL_nvidia.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv libGLESv2_nvidia.so.%{version} %{buildroot}%{_libdir}/nvidia
@@ -418,6 +414,7 @@ mv 32/libGLX_nvidia.so.%{version} %{buildroot}/usr/lib/nvidia/
 mv 32/libnvidia-eglcore.so.%{version} %{buildroot}/usr/lib/nvidia/
 mv 32/libnvidia-glcore.so.%{version} %{buildroot}/usr/lib/nvidia/
 mv 32/libnvidia-glvkspirv.so.%{version} %{buildroot}/usr/lib/nvidia/
+mv 32/libnvidia-glsi.so.%{version} %{buildroot}/usr/lib/nvidia/
 mv 32/libnvidia-gpucomp.so.%{version} %{buildroot}/usr/lib/nvidia/
 mv 32/libnvidia-tls.so.%{version} %{buildroot}/usr/lib/nvidia/
 mv 32/libnvidia-allocator.so.%{version} %{buildroot}/usr/lib/nvidia/
@@ -448,6 +445,7 @@ cp LICENSE LICENSE-%{version}
 # Create symbolic links
 cd %{buildroot}%{_libdir}
 ln -sr nvidia/libnvidia-ml.so.%{version} libnvidia-ml.so.1
+ln -sr nvidia/libcuda.so.%{version} libcuda.so.1
 ln -sr nvidia/libnvidia-gpucomp.so.%{version} libnvidia-gpucomp.so.%{version}
 ln -sr nvidia/libnvidia-api.so.* libnvidia-api.so.1
 ln -sr nvidia/libnvidia-glcore.so.%{version} libnvidia-glcore.so.%{version}
@@ -489,13 +487,8 @@ cd %{buildroot}/usr/lib
 ln -sr nvidia/libGLX_nvidia.so.%{version} libGLX_nvidia.so.0
 ln -sr nvidia/libEGL_nvidia.so.%{version} libEGL_nvidia.so.0
 ln -sr nvidia/libGLESv2_nvidia.so.%{version} libGLESv2_nvidia.so.2
-ln -sr nvidia/libnvidia-ml.so.%{version} libnvidia-ml.so.1
 ln -sr nvidia/libnvidia-encode.so.%{version} libnvidia-encode.so.1
-ln -sr nvidia/libvdpau_nvidia.so.%{version} libvdpau_nvidia.so.1
 
-cd %{buildroot}%{_prefix}/src/nvidia-%{version}
-ln -srf nvidia-modeset/nv-modeset-kernel.o_binary nvidia-modeset/nv-modeset-kernel.o
-ln -srf nvidia/nv-kernel.o_binary nvidia/nv-kernel.o
 
 %check
 ls -l * > %{_topdir}/leaves.list
@@ -671,14 +664,16 @@ fi
 %{_libdir}/nvidia/libnvidia-vksc-core.so.%{version}
 %{_libdir}/libnvidia-vksc-core.so.1
 %{_libdir}/libGLX_indirect.so.0
+%{_libdir}/nvidia/libcuda.so.%{version}
+%{_libdir}/libcuda.so.1
 %{_libdir}/libnvidia-rtcore.so.%{version}
+%{_libdir}/nvidia/libnvidia-rtcore.so.%{version}
 %{_libdir}/nvidia/libnvidia-glcore.so.%{version}
 %{_libdir}/libnvidia-glcore.so.%{version}
 %ghost %{_datadir}/vulkan/icd.d/nvidia_icd.json
 %ghost %{_datadir}/vulkan/implicit_layer.d/nvidia_layers.json
 %{_datadir}/nvidia/vulkan/nvidia_icd.json
 %{_datadir}/nvidia/vulkan/nvidia_layers.json
-%{_datadir}/vulkansc/icd.d
 %{_datadir}/nvidia/vulkan/egl-nvidia_icd_vksc.json
 %config(noreplace) %{_datadir}/vulkansc/icd.d/nvidia_icd_vksc.json
 
@@ -724,6 +719,13 @@ fi
 %{_bindir}/nvidia-debugdump
 %dir %{_prefix}/lib/nvidia
 %{_prefix}/lib/nvidia/*
+%{_libdir}/nvidia/libnvcuvid.so.%{version}
+%{_libdir}/nvidia/libnvidia-encode.so.%{version}
+%{_libdir}/nvidia/libnvidia-fbc.so.%{version}
+%{_libdir}/nvidia/libnvidia-pkcs11-openssl3.so.%{version}
+%{_libdir}/nvidia/libnvidia-sandboxutils.so.%{version}
+%{_libdir}/libnvidia-ml.so.1
+%{_libdir}/vdpau/libvdpau_nvidia.so.1
 %{_libdir}/libnvidia-encode.so.1
 %{_libdir}/libnvcuvid.so.1
 %{_libdir}/libnvidia-fbc.so.1
