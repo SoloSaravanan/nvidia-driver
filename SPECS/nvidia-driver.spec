@@ -477,6 +477,7 @@ mv libGLESv1_CM_nvidia.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv libnvidia-egl-wayland.so.* %{buildroot}%{_libdir}/nvidia
 mv libnvidia-egl-wayland2.so.* %{buildroot}%{_libdir}/nvidia
 mv 09_nvidia_wayland2.json %{buildroot}%{_datadir}/egl/egl_external_platform.d
+mv 10_nvidia_wayland.json %{buildroot}%{_datadir}/egl/egl_external_platform.d
 mv libnvidia-egl-gbm.so.* %{buildroot}%{_libdir}/nvidia
 mv 15_nvidia_gbm.json %{buildroot}%{_datadir}/egl/egl_external_platform.d
 mv libnvidia-egl-xcb.so.* %{buildroot}%{_libdir}/nvidia
@@ -499,6 +500,7 @@ mv libnvidia-rtcore.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv libnvoptix.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv nvoptix.bin %{buildroot}%{_datadir}/nvidia
 mv libnvidia-ngx.so.%{version} %{buildroot}%{_libdir}/nvidia
+mv nvidia-pcc %{buildroot}%{_bindir}
 mv nvidia-ngx-updater %{buildroot}%{_bindir}
 mv *.dll %{buildroot}%{_libdir}/nvidia/wine
 chmod 755 %{buildroot}%{_libdir}/nvidia/wine/*.dll
@@ -744,6 +746,7 @@ fi
 %{_libdir}/nvidia/libnvidia-egl-wayland.so.*
 %{_libdir}/libnvidia-egl-wayland.so.1
 %{_libdir}/nvidia/libnvidia-egl-wayland2.so.*
+%{_datadir}/egl/egl_external_platform.d/10_nvidia_wayland.json
 %{_libdir}/libnvidia-egl-wayland2.so.1
 %{_datadir}/egl/egl_external_platform.d/09_nvidia_wayland2.json
 
@@ -886,6 +889,7 @@ fi
 
 %files -n nvidia-ngx
 %defattr(-,root,root,-)
+%{_bindir}/nvidia-pcc
 %{_bindir}/nvidia-ngx-updater
 %{_libdir}/nvidia/libnvidia-ngx.so.%{version}
 %{_libdir}/libnvidia-ngx.so.%{version}
