@@ -529,10 +529,10 @@ install -Dm0644 %{SOURCE5} -t %{buildroot}%{_presetdir}
 install -Dm0644 %{SOURCE6} -t %{buildroot}%{_sysusersdir}
 install -Dm0644 %{SOURCE7} -t %{buildroot}%{_unitdir}
 
-jq .ICD.library_path=\"libEGL_nvidia.so.0\" %{buildroot}%{_datadir}/nvidia/vulkan/nvidia_icd.json > %{buildroot}%{_datadir}/nvidia/vulkan/egl-nvidia_icd.json
-jq .layers[0].library_path=\"libEGL_nvidia.so.0\" %{buildroot}%{_datadir}/nvidia/vulkan/nvidia_layers.json > %{buildroot}%{_datadir}/nvidia/vulkan/egl-nvidia_layers.json
-jq .ICD.library_path=\"libEGL_nvidia.so.0\" %{buildroot}%{_datadir}/vulkansc/icd.d/nvidia_icd_vksc.json > %{buildroot}%{_datadir}/nvidia/vulkan/egl-nvidia_icd_vksc.json
-jq .ICD.library_path=\"/usr/lib/nvidia/libEGL_nvidia.so.0\" %{buildroot}%{_datadir}/nvidia/vulkan/nvidia_icd.json > %{buildroot}%{_datadir}/nvidia/vulkan/nvidia_icd_32.json
+cp %{buildroot}%{_datadir}/nvidia/vulkan/nvidia_icd.json %{buildroot}%{_datadir}/nvidia/vulkan/egl-nvidia_icd.json
+cp %{buildroot}%{_datadir}/nvidia/vulkan/nvidia_layers.json %{buildroot}%{_datadir}/nvidia/vulkan/egl-nvidia_layers.json
+cp %{buildroot}%{_datadir}/vulkansc/icd.d/nvidia_icd_vksc.json %{buildroot}%{_datadir}/nvidia/vulkan/egl-nvidia_icd_vksc.json
+cp %{buildroot}%{_datadir}/nvidia/vulkan/nvidia_icd.json %{buildroot}%{_datadir}/nvidia/vulkan/nvidia_icd_32.json
 
 cp LICENSE LICENSE-%{version}-%{kernel_rel}
 cp LICENSE LICENSE-%{version}
