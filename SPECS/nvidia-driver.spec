@@ -415,8 +415,21 @@ mv 32/libEGL_nvidia.so.%{version} %{buildroot}/usr/lib/nvidia/
 mv 32/libGLESv1_CM_nvidia.so.%{version} %{buildroot}/usr/lib/nvidia/
 mv 32/libGLESv2_nvidia.so.%{version} %{buildroot}/usr/lib/nvidia/
 mv 32/libGLX_nvidia.so.%{version} %{buildroot}/usr/lib/nvidia/
-mv 32/libnvidia-*.so.* %{buildroot}/usr/lib/nvidia/
+mv 32/libnvidia-eglcore.so.%{version} %{buildroot}/usr/lib/nvidia/
+mv 32/libnvidia-glcore.so.%{version} %{buildroot}/usr/lib/nvidia/
+mv 32/libnvidia-glvkspirv.so.%{version} %{buildroot}/usr/lib/nvidia/
+mv 32/libnvidia-gpucomp.so.%{version} %{buildroot}/usr/lib/nvidia/
+mv 32/libnvidia-tls.so.%{version} %{buildroot}/usr/lib/nvidia/
+mv 32/libnvidia-allocator.so.%{version} %{buildroot}/usr/lib/nvidia/
+mv 32/libnvidia-egl-gbm.so.1.1.3 %{buildroot}/usr/lib/nvidia/
+mv 32/libnvidia-egl-wayland.so.1.1.20 %{buildroot}/usr/lib/nvidia/
+mv 32/libnvidia-egl-wayland2.so.1.0.2 %{buildroot}/usr/lib/nvidia/
+mv 32/libnvidia-egl-xcb.so.1.0.6 %{buildroot}/usr/lib/nvidia/
+mv 32/libnvidia-egl-xlib.so.1.0.6 %{buildroot}/usr/lib/nvidia/
 mv 32/libvdpau_nvidia.so.%{version} %{buildroot}/usr/lib/nvidia/
+mv 32/libnvcuvid.so.%{version} %{buildroot}/usr/lib/nvidia/
+mv 32/libnvidia-fbc.so.%{version} %{buildroot}/usr/lib/nvidia/
+mv 32/libnvidia-ml.so.%{version} %{buildroot}/usr/lib/nvidia/
 echo "/usr/lib/nvidia" > %{buildroot}%{_sysconfdir}/ld.so.conf.d/nvidia-32bit.conf
 
 install -Dm0644 %{SOURCE2} -t %{buildroot}%{_modprobedir}
@@ -726,9 +739,6 @@ fi
 /usr/lib/libGLX_nvidia.so.0
 /usr/lib/libEGL_nvidia.so.0
 /usr/lib/libGLESv2_nvidia.so.2
-/usr/lib/libnvidia-ml.so.1
-/usr/lib/libnvidia-encode.so.1
-/usr/lib/libvdpau_nvidia.so.1
 %config(noreplace) %{_sysconfdir}/ld.so.conf.d/nvidia-32bit.conf
 %{_datadir}/nvidia/vulkan/nvidia_icd_32.json
 
