@@ -16,5 +16,25 @@ EOF
 ```
 
 ```
-sudo dnf install -y nvidia-cfg nvidia-common nvidia-cuda nvidia-driver nvidia-egl nvidia-egl-gbm nvidia-egl-wayland nvidia-gbm nvidia-gles nvidia-glx nvidia-gpu-firmware nvidia-modprobe nvidia-modules-open nvidia-ngx nvidia-opencl nvidia-powerd nvidia-security nvidia-settings nvidia-smi nvidia-vdpau nvidia-video nvidia-vision
+sudo dnf install -y \
+  nvidia-driver \
+  nvidia-gpu-firmware \
+  nvidia-common \
+  nvidia-modules-open \
+  nvidia-modprobe \
+  nvidia-egl \
+  nvidia-egl-wayland \
+  nvidia-egl-gbm \
+  nvidia-egl-xwayland \
+  nvidia-smi \
+  nvidia-gbm \
+  nvidia-gles \
+  nvidia-glx \
+  nvidia-vdpau \
+  nvidia-powerd \
+  nvidia-settings \
+  nvidia-ngx \
+  nvidia-cfg \
+  nvidia-utils \
+  nvidia-libs-32bit
 ```
