@@ -1,0 +1,32 @@
+#!/usr/bin/bash
+# Create device nodes for NVIDIA GPUs after the kernel driver binds.
+set -u
+shopt -s nullglob
+
+nvidia_modprobe=/usr/bin/nvidia-modprobe
+status=0
+
+if [[ ! -x "$nvidia_modprobe" ]]; then
+    exit 1
+fi
+
+for information in /proc/driver/nvidia/gpus/*/information; do
+    [[ -r "$information" ]] || continue
+
+    minor=$(/usr/bin/awk -F: '$1 == "Minor" { gsub(/[[:space:]]/, "", $2); print $2; exit }' "$information")
+    [[ "$minor" =~ ^[0-9]+$ ]] || continue
+
+    if [[ ! -e "/dev/nvidia$minor" ]]; then
+        "$nvidia_modprobe" --create-nvidia-device-file="$minor" || status=1
+    fi
+done
+
+if [[ ! -e /dev/nvidia-uvm ]]; then
+    "$nvidia_modprobe" --unified-memory --create-nvidia-device-file=0 || status=1
+fi
+
+if [[ ! -e /dev/nvidia-modeset ]]; then
+    "$nvidia_modprobe" --modeset || status=1
+fi
+
+exit "$status"

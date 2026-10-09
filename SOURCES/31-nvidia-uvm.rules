@@ -1,2 +1,4 @@
-# Load nvidia-uvm module
-ACTION=="add", DEVPATH=="/bus/pci/drivers/nvidia", RUN+="/usr/bin/nvidia-modprobe -u -c 0"
+# Create NVIDIA device nodes for Wayland and UVM clients before they are needed.
+ACTION=="add|bind", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", \
+    ATTR{class}=="0x03[0-9]*", DRIVER=="nvidia", \
+    TEST!="/dev/nvidia-uvm", RUN+="/usr/bin/nvidia-create-device-nodes"

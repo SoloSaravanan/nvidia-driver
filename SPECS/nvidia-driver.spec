@@ -30,6 +30,7 @@ Source2:                nvidia.conf
 Source3:                60-nvidia.conf
 Source4:                31-nvidia-uvm.rules
 Source5:                86-nvidia-driver.preset
+Source6:                nvidia-create-device-nodes
 
 %if %{sign_module}
 Source8:                https://github.com/fxzxmic/sign-module/releases/download/v1.0.2/sign-module
@@ -430,6 +431,7 @@ install -Dm0644 %{SOURCE2} -t %{buildroot}%{_modprobedir}
 install -Dm0644 %{SOURCE3} -t %{buildroot}%{_prefix}/lib/dracut/dracut.conf.d
 install -Dm0644 %{SOURCE4} -t %{buildroot}%{_udevrulesdir}
 install -Dm0644 %{SOURCE5} -t %{buildroot}%{_presetdir}
+install -Dm0755 %{SOURCE6} %{buildroot}%{_bindir}/nvidia-create-device-nodes
 
 cp %{buildroot}%{_datadir}/nvidia/vulkan/nvidia_icd.json %{buildroot}%{_datadir}/nvidia/vulkan/egl-nvidia_icd.json
 cp %{buildroot}%{_datadir}/nvidia/vulkan/nvidia_layers.json %{buildroot}%{_datadir}/nvidia/vulkan/egl-nvidia_layers.json
@@ -598,6 +600,7 @@ fi
 
 %files -n nvidia-modprobe
 %attr(4755,root,root) %{_bindir}/nvidia-modprobe
+%{_bindir}/nvidia-create-device-nodes
 %{_mandir}/man1/nvidia-modprobe.1.gz
 
 %files -n nvidia-egl
