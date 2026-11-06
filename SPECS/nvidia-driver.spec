@@ -17,7 +17,7 @@
 %endif
 
 Name:                   nvidia-driver
-Version:                615.78.08
+Version:                620.70.06
 Release:                %{main_rel}
 Summary:                NVIDIA binary driver for Linux
 Group:                  System Environment/Graphics
@@ -291,11 +291,12 @@ cd %{_sourcedir}
 # Verify sha256sum
 sha256sum -c %{SOURCE1}
 
-rm -rf %{_builddir}
-sh %{SOURCE0} --extract-only --target %{_builddir}
+# Keep rpmbuild.env in %{_builddir}; extract the driver into a child directory.
+rm -rf %{_builddir}/nvidia-driver
+sh %{SOURCE0} --extract-only --target %{_builddir}/nvidia-driver
 
 %build
-cd %{_builddir}/%{module_dir}
+cd %{_builddir}/nvidia-driver/%{module_dir}
 export SYSSRC=%{_prefix}/src/kernels/%{kernel_rel}.%{_arch}
 export SYSOUT=$SYSSRC
 export NV_EXCLUDE_KERNEL_MODULES="nvidia-vgpu-vfio nvidia-peermem"
@@ -308,6 +309,7 @@ strip --strip-unneeded *.ko
 xz --check=crc32 -9 *.ko
 
 %install
+cd %{_builddir}/nvidia-driver
 mkdir -p %{buildroot}/lib/firmware/nvidia/%{version}
 mkdir -p %{buildroot}%{_sysusersdir}
 mkdir -p %{buildroot}%{_bindir}
@@ -551,10 +553,10 @@ fi
 %postun -n nvidia-libs-32bit -p /sbin/ldconfig
 
 %files
-%license LICENSE
-%doc README.txt
-%doc NVIDIA_Changelog
-%doc supported-gpus
+%license nvidia-driver/LICENSE
+%doc nvidia-driver/README.txt
+%doc nvidia-driver/NVIDIA_Changelog
+%doc nvidia-driver/supported-gpus
 %{_bindir}/nvidia-sleep.sh
 %dir %{_libdir}/nvidia
 %{_libdir}/nvidia/libnvidia-gpucomp.so.%{version}
@@ -580,7 +582,7 @@ fi
 %{_datadir}/nvidia/nvidia-application-profiles-%{version}-rc
 
 %files -n nvidia-gpu-firmware
-%license LICENSE-%{version}
+%license nvidia-driver/LICENSE-%{version}
 %dir /lib/firmware/nvidia
 %dir /lib/firmware/nvidia/%{version}
 /lib/firmware/nvidia/%{version}/*
@@ -595,7 +597,7 @@ fi
 %endif
 
 %files -n nvidia-modules-open
-%license LICENSE-%{version}-%{kernel_rel}
+%license nvidia-driver/LICENSE-%{version}-%{kernel_rel}
 /lib/modules/%{kernel_rel}.%{_arch}/kernel/drivers/video/*
 
 %files -n nvidia-modprobe
