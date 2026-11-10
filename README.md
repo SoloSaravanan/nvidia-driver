@@ -3,9 +3,9 @@
 **Add repository**
 
 ```
-sudo sed -i '/^enabled=1$/!b; n; /^[[:space:]]*exclude=/!i exclude=*nvidia*' /etc/yum.repos.d/rpmfusion-nonfree*.repo
+sudo sed -i '/^enabled=1$/!b; n; /^[[:space:]]*exclude=/!i exclude=*nvidia*' /usr/share/dnf5/repos.d/rpmfusion-nonfree*.repo
 
-sudo tee -a /etc/yum.repos.d/nvidia-driver.repo > /dev/null << 'EOF'
+sudo tee -a /usr/share/dnf5/repos.d/nvidia-driver.repo > /dev/null << 'EOF'
 [nvidia-driver]
 name=Nvidia Driver
 baseurl=https://solosaravanan.github.io/nvidia-driver/

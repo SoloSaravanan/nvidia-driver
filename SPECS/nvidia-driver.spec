@@ -396,9 +396,16 @@ mv libvdpau_nvidia.so.%{version} %{buildroot}%{_libdir}/vdpau
 mv libnvidia-allocator.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv libnvidia-rtcore.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv libnvidia-ngx.so.%{version} %{buildroot}%{_libdir}/nvidia
+mv libnvidia-ngx-builtin-dlssd.so.* %{buildroot}%{_libdir}/nvidia
+chmod 755 %{buildroot}%{_libdir}/nvidia/libnvidia-ngx-builtin-dlssd.so.*
 mv nvidia-ngx-updater %{buildroot}%{_bindir}
 mv *.dll %{buildroot}%{_libdir}/nvidia/wine
-chmod 755 %{buildroot}%{_libdir}/nvidia/wine/*.dll
+mv nvngx_update.exe %{buildroot}%{_libdir}/nvidia/wine
+mkdir -p %{buildroot}%{_libdir}/nvidia/wine/ngx-builtins
+mv ngx-builtins/nvngx_dlssd.dll %{buildroot}%{_libdir}/nvidia/wine/ngx-builtins
+chmod 755 %{buildroot}%{_libdir}/nvidia/wine/*.dll \
+    %{buildroot}%{_libdir}/nvidia/wine/nvngx_update.exe \
+    %{buildroot}%{_libdir}/nvidia/wine/ngx-builtins/nvngx_dlssd.dll
 mv libnvcuvid.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv libnvidia-opticalflow.so.%{version} %{buildroot}%{_libdir}/nvidia
 mv libnvidia-encode.so.%{version} %{buildroot}%{_libdir}/nvidia
@@ -699,11 +706,14 @@ fi
 %files -n nvidia-ngx
 %{_bindir}/nvidia-ngx-updater
 %{_libdir}/nvidia/libnvidia-ngx.so.%{version}
+%{_libdir}/nvidia/libnvidia-ngx-builtin-dlssd.so.*
 %{_libdir}/libnvidia-ngx.so.%{version}
 %{_libdir}/libnvidia-ngx.so.1
 %{_libdir}/nvidia/wine/nvngx.dll
 %{_libdir}/nvidia/wine/nvngx_dlssg.dll
 %{_libdir}/nvidia/wine/_nvngx.dll
+%{_libdir}/nvidia/wine/nvngx_update.exe
+%{_libdir}/nvidia/wine/ngx-builtins/nvngx_dlssd.dll
 
 
 %files -n nvidia-cfg
